@@ -1,0 +1,11 @@
+/beto_pretrained
+/logs
+desktop.ini
+contradictions.tsv
+contradictions_no_dup.tsv
+paraphrases.tsv
+paraphrases_no_dup.tsv
+ppdb-2.0-m-all
+test.tsv
+contradictions_translated.tsv
+paraphrases_translated.tsv
