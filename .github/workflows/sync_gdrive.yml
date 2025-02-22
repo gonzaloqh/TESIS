@@ -17,16 +17,14 @@ jobs:
         run: |
           Invoke-WebRequest -Uri https://downloads.rclone.org/rclone-current-windows-amd64.zip -OutFile rclone.zip
           Expand-Archive -Path rclone.zip -DestinationPath C:\rclone
+          Move-Item -Path C:\rclone\rclone-*-windows-amd64\rclone.exe -Destination C:\rclone\rclone.exe
           echo "C:\rclone" | Out-File -Append -Encoding ASCII $env:GITHUB_PATH
 
       - name: Configure rclone
         run: |
           mkdir -Force $env:APPDATA\rclone
-          Set-Content -Path "$env:APPDATA\rclone\rclone.conf" -Value "${{ secrets.RCLONE_CONFIG }}" -Encoding UTF8
-
-      - name: Verify rclone configuration
-        run: C:\rclone\rclone.exe listremotes --config "$env:APPDATA\rclone\rclone.conf"
-
+          [System.IO.File]::WriteAllBytes("$env:APPDATA\rclone\rclone.conf", [Convert]::FromBase64String("${{ secrets.RCLONE_CONFIG_BASE64 }}"))
+        
       - name: Upload files to Google Drive
         run: |
-          C:\rclone\rclone.exe sync "$PWD" "gdrive:/" --config "$env:APPDATA\rclone\rclone.conf" --drive-root-folder-id 1Nj5B-9tkfQGGBLesUBZeC77DRVYSWQeS --fast-list --exclude ".git/**" --transfers 10
+          C:\rclone\rclone.exe sync "$PWD" "gdrive:/" --drive-root-folder-id 1Nj5B-9tkfQGGBLesUBZeC77DRVYSWQeS --fast-list --exclude ".git/**" --transfers 10
