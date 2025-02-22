@@ -22,8 +22,7 @@ jobs:
 
       - name: Configure rclone
         run: |
-          mkdir -Force $env:APPDATA\rclone
-          Set-Content -Path "$env:APPDATA\rclone\rclone.conf" -Value "${{ secrets.RCLONE_CONFIG }}"
+          mkdir -Force $env:APPDATA\rclone "${{ secrets.RCLONE_CONFIG }}" | Out-File -FilePath "$env:APPDATA\rclone\rclone.conf" -Encoding utf8
 
       - name: Upload files to Google Drive
         run: |
