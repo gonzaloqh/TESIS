@@ -25,7 +25,6 @@ jobs:
           mkdir -Force $env:APPDATA\rclone
           [System.IO.File]::WriteAllBytes("$env:APPDATA\rclone\rclone.conf", [Convert]::FromBase64String("${{ secrets.RCLONE_CONFIG_BASE64 }}"))
         
-        
       - name: Upload files to Google Drive
         run: |
-          C:\rclone\rclone.exe sync $GITHUB_WORKSPACE gdrive:/ --drive-root-folder-id 1Nj5B-9tkfQGGBLesUBZeC77DRVYSWQeS --fast-list --exclude ".git/**" --transfers 10 -vv
+          C:\rclone\rclone.exe sync "$PWD" "gdrive:/" --drive-root-folder-id 1Nj5B-9tkfQGGBLesUBZeC77DRVYSWQeS --fast-list --exclude ".git/**" --transfers 10
