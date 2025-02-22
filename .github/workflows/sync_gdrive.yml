@@ -1,0 +1,29 @@
+name: Sync to Google Drive (Windows)
+
+on:
+  push:
+    branches:
+      - master  # Cambia esto si usas otra rama
+
+jobs:
+  sync:
+    runs-on: windows-latest  # Usa una máquina con Windows
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install rclone
+        run: |
+          Invoke-WebRequest -Uri https://downloads.rclone.org/rclone-current-windows-amd64.zip -OutFile rclone.zip
+          Expand-Archive -Path rclone.zip -DestinationPath C:\rclone
+          echo "C:\rclone" | Out-File -Append -Encoding ASCII $env:GITHUB_PATH
+
+      - name: Configure rclone
+        run: |
+          mkdir $env:APPDATA\rclone
+          echo "${{ secrets.RCLONE_CONFIG }}" > $env:APPDATA\rclone\rclone.conf
+
+      - name: Upload files to Google Drive
+        run: |
+          C:\rclone\rclone.exe sync . gdrive:/TESIS/CODIGO --exclude ".git/**" --transfers 10
