@@ -23,7 +23,8 @@ jobs:
       - name: Configure rclone
         run: |
           mkdir -Force $env:APPDATA\rclone
-          [System.IO.File]::WriteAllText("$env:APPDATA\rclone\rclone.conf", "${{ secrets.RCLONE_CONFIG }}")
+          [System.IO.File]::WriteAllBytes("$env:APPDATA\rclone\rclone.conf", [Convert]::FromBase64String("${{ secrets.RCLONE_CONFIG_BASE64 }}"))
+        
         
       - name: Upload files to Google Drive
         run: |
